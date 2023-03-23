@@ -20,12 +20,19 @@ export const App = () => {
   const [totalImgs, setTotalImgs] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = (searchValue) => {
     setSearchValue(searchValue);
     setPage(1);
     setSearchResult([]);
+    if(searchValue === '') {
+      setLoading(false);
+      setError(null);
+      setShowButton(false);
+      return;
+    }
     setLoading(true);
   };
 
@@ -39,9 +46,7 @@ export const App = () => {
         const photos = await fetchGallery(searchValue, page);
 
         if(photos.hits.length === 0) {
-          return Promise.reject(
-              new Error('There are no images matching. Please try again')
-          );
+          throw new Error('There are no images matching. Please try again');
         };
 
         if(page === 1) {
@@ -51,35 +56,17 @@ export const App = () => {
         }
           
         setTotalImgs(photos.total);
+        setShowButton(true);
         setError(null);
       } catch (error) {
         setError(error);
+        setShowButton(false);
       } finally {
         setLoading(false);
       }
     };
 
     fetch();
-
-    // fetchGallery(searchValue, page)
-    // .then(photos => {
-    //   if(photos.hits.length === 0) {
-    //       return Promise.reject(
-    //           new Error('There are no images matching. Please try again')
-    //       );
-    //   };
-
-    //   if(page === 1) {
-    //     setSearchResult(photos.hits);
-    //   } else {
-    //     setSearchResult([...searchResult, ...photos.hits]);
-    //   }
-        
-    //   setTotalImgs(photos.total);
-    //   setError(null);
-    // })
-    // .catch(error => setError(error))
-    // .finally(() => setLoading(false))
   }, [searchValue, page]);
 
   const handleBtnClick = () => {
@@ -104,9 +91,9 @@ export const App = () => {
         {loading && <Loader />}
         {error && <ErrorMessage>{error.message}</ErrorMessage>}
 
-        {searchResult && 
-        searchResult.length < totalImgs && 
-        !error && 
+        {showButton && 
+        searchResult.length < totalImgs &&
+        !loading &&  
         <Button onBtnClick={handleBtnClick} />}
 
         {showModal && 
