@@ -52,7 +52,7 @@ export const App = () => {
         if(page === 1) {
           setSearchResult(photos.hits);
         } else {
-          setSearchResult([...searchResult, ...photos.hits]);
+          setSearchResult(prevState => [...searchResult, ...photos.hits]);
         }
           
         setTotalImgs(photos.total);

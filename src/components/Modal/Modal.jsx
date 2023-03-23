@@ -5,21 +5,20 @@ import { Overlay, ModalImg } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({ onClose, children }) => {
-    console.log(children)
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () =>{
-            window.removeEventListener('keydown', handleKeyDown);
-        }
-    }, []);
-
+const Modal = ({ onClose, children }) => {    
     const handleKeyDown = e => {
         if(e.code === 'Escape') {
             onClose();
         }
     }
+    
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () =>{
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    });
 
     const handleOverlayClck = (e) => {
         if(e.target === e.currentTarget) {
