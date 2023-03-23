@@ -52,7 +52,7 @@ export const App = () => {
         if(page === 1) {
           setSearchResult(photos.hits);
         } else {
-          setSearchResult(prevState => [...searchResult, ...photos.hits]);
+          setSearchResult(searchResult => [...searchResult, ...photos.hits]);
         }
           
         setTotalImgs(photos.total);
@@ -89,7 +89,7 @@ export const App = () => {
           toggleModal={toggleModal} />
 
         {loading && <Loader />}
-        {error && <ErrorMessage>{error.message}</ErrorMessage>}
+        {error && !loading && <ErrorMessage>{error.message}</ErrorMessage>}
 
         {showButton && 
         searchResult.length < totalImgs &&
